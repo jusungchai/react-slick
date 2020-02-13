@@ -1,5 +1,5 @@
 {
-  "name": "react-slick",
+  "name": "vouchr-react-slick",
   "version": "0.25.2",
   "description": " React port of slick carousel",
   "main": "./lib",
@@ -17,7 +17,6 @@
     "gen": "node examples/scripts/generateExampleConfigs.js && node examples/scripts/generateExamples.js && xdg-open docs/jquery.html",
     "precommit": "lint-staged"
   },
-  "author": "Kiran Abburi",
   "license": "MIT",
   "repository": {
     "type": "git",
