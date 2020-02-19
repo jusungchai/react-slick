@@ -26,6 +26,7 @@ import {
 import { Track } from "./track";
 import { Dots } from "./dots";
 import { PrevArrow, NextArrow } from "./arrows";
+import { HiddenPlayPauseButton } from "./hiddenPlayPauseButton";
 import ResizeObserver from "resize-observer-polyfill";
 
 export class InnerSlider extends React.Component {
@@ -606,7 +607,8 @@ export class InnerSlider extends React.Component {
       "trackStyle",
       "variableWidth",
       "unslick",
-      "centerPadding"
+      "centerPadding",
+      "accessibilitySlideLabel"
     ]);
     const { pauseOnHover } = this.props;
     trackProps = {
@@ -645,7 +647,7 @@ export class InnerSlider extends React.Component {
       dots = <Dots {...dotProps} />;
     }
 
-    var prevArrow, nextArrow;
+    var prevArrow, nextArrow, hiddenPlayPauseButton;
     let arrowProps = extractObject(spec, [
       "infinite",
       "centerMode",
@@ -653,13 +655,33 @@ export class InnerSlider extends React.Component {
       "slideCount",
       "slidesToShow",
       "prevArrow",
-      "nextArrow"
+      "nextArrow",
+      "accessibilityNextLabel",
+      "accessibilityPreviousLabel"
     ]);
     arrowProps.clickHandler = this.changeSlide;
+
+    let hiddenPlayPauseButtonProps = extractObject(spec, [
+      "accessibilityPauseLabel",
+      "accessibilityPlayLabel"
+    ]);
+
+    hiddenPlayPauseButtonProps.isPaused = this.state.autoplaying === "paused";
+
+    hiddenPlayPauseButtonProps.clickHandler =
+      this.state.autoplaying && this.state.autoplaying === "paused"
+        ? this.autoPlay
+        : () => this.pause("paused");
 
     if (this.props.arrows) {
       prevArrow = <PrevArrow {...arrowProps} />;
       nextArrow = <NextArrow {...arrowProps} />;
+    }
+
+    if (this.props.hiddenPlayPauseButton && this.state.autoplaying) {
+      hiddenPlayPauseButton = (
+        <HiddenPlayPauseButton {...hiddenPlayPauseButtonProps} />
+      );
     }
 
     var verticalHeightStyle = null;
@@ -715,13 +737,16 @@ export class InnerSlider extends React.Component {
     }
     return (
       <div {...innerSliderProps}>
-        {!this.props.unslick ? prevArrow : ""}
+        {this.props.hiddenPlayPauseButton ? hiddenPlayPauseButton : ""}
+        <ul className="controls">
+          {!this.props.unslick ? prevArrow : ""}
+          {!this.props.unslick ? nextArrow : ""}
+        </ul>
         <div ref={this.listRefHandler} {...listProps}>
           <Track ref={this.trackRefHandler} {...trackProps}>
             {this.props.children}
           </Track>
         </div>
-        {!this.props.unslick ? nextArrow : ""}
         {!this.props.unslick ? dots : ""}
       </div>
     );

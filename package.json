@@ -1,6 +1,6 @@
 {
   "name": "vouchr-react-slick",
-  "version": "0.25.3",
+  "version": "0.26.0",
   "description": " React port of slick carousel",
   "main": "./lib",
   "files": [

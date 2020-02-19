@@ -184,15 +184,17 @@ export default class Slider extends React.Component {
         }
         newSlide.push(<div key={10 * i + j}>{row}</div>);
       }
-      if (settings.variableWidth) {
-        newChildren.push(
-          <div key={i} style={{ width: currentWidth }}>
-            {newSlide}
-          </div>
-        );
-      } else {
-        newChildren.push(<div key={i}>{newSlide}</div>);
-      }
+
+      newChildren.push(
+        <li
+          key={i}
+          role="tabpanel"
+          aria-label={`${settings.accessibilitySlideLabel}-${i + 1}`}
+          style={settings.variableWidth ? { width: currentWidth } : null}
+        >
+          {newSlide}
+        </li>
+      );
     }
 
     if (settings === "unslick") {
@@ -202,7 +204,11 @@ export default class Slider extends React.Component {
       settings.unslick = true;
     }
     return (
-      <InnerSlider style={this.props.style} ref={this.innerSliderRefHandler} {...settings}>
+      <InnerSlider
+        style={this.props.style}
+        ref={this.innerSliderRefHandler}
+        {...settings}
+      >
         {newChildren}
       </InnerSlider>
     );
