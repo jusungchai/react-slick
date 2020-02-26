@@ -17,23 +17,10 @@ const getDotCount = spec => {
   return dots;
 };
 
-var getNthDotAssociatedSlides = function(n, spec) {
-  var nthDotAssociatedSlides = "";
-  for (
-    var i = spec.slidesToScroll * n;
-    (i < spec.slideCount || spec.infinite) &&
-    i < spec.slidesToScroll * n + spec.slidesToShow;
-    i = i + 1
-  ) {
-    if (i >= spec.slideCount && spec.infinite) {
-      var newIndex = i - spec.slideCount;
-      nthDotAssociatedSlides += ` slide-${newIndex}`;
-    } else {
-      nthDotAssociatedSlides += ` slide-${i}`;
-    }
-  }
+const unwrap = (level, item) => {
+  const _item = item.props.children[0];
 
-  return nthDotAssociatedSlides;
+  return level === 1 ? _item : unwrap(level - 1, _item);
 };
 
 export class Dots extends React.PureComponent {
@@ -79,33 +66,20 @@ export class Dots extends React.PureComponent {
       };
 
       let onClick = this.clickHandler.bind(this, dotOptions);
+
+      const slide = unwrap(2, this.props.slides[i]);
+
       return (
         <li
           key={i}
           role="tab"
-          aria-labelledby={getNthDotAssociatedSlides(i, {
-            slideCount: this.props.slideCount,
-            slidesToScroll: this.props.slidesToScroll,
-            slidesToShow: this.props.slidesToShow,
-            infinite: this.props.infinite
-          })}
-          aria-controls={getNthDotAssociatedSlides(i, {
-            slideCount: this.props.slideCount,
-            slidesToScroll: this.props.slidesToScroll,
-            slidesToShow: this.props.slidesToShow,
-            infinite: this.props.infinite
-          })}
+          aria-controls={slide.props.id}
           aria-selected={isSlideActive}
           className={className}
         >
           {React.cloneElement(this.props.customPaging(i), {
             onClick,
-            "aria-labelledby": getNthDotAssociatedSlides(i, {
-              slideCount: this.props.slideCount,
-              slidesToScroll: this.props.slidesToScroll,
-              slidesToShow: this.props.slidesToShow,
-              infinite: this.props.infinite
-            })
+            "aria-labelledby": slide.props.id
           })}
         </li>
       );
@@ -113,6 +87,7 @@ export class Dots extends React.PureComponent {
 
     return React.cloneElement(this.props.appendDots(dots), {
       className: this.props.dotsClass,
+      role: "tablist",
       ...mouseEvents
     });
   }

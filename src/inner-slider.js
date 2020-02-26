@@ -645,7 +645,8 @@ export class InnerSlider extends React.Component {
         clickHandler: this.changeSlide,
         onMouseEnter: pauseOnDotsHover ? this.onDotsLeave : null,
         onMouseOver: pauseOnDotsHover ? this.onDotsOver : null,
-        onMouseLeave: pauseOnDotsHover ? this.onDotsLeave : null
+        onMouseLeave: pauseOnDotsHover ? this.onDotsLeave : null,
+        slides: this.props.children
       };
       dots = <Dots {...dotProps} />;
     }
@@ -741,10 +742,10 @@ export class InnerSlider extends React.Component {
     return (
       <div {...innerSliderProps}>
         {this.props.hiddenPlayPauseButton ? hiddenPlayPauseButton : ""}
-        <ul className="controls">
+        <div className="controls">
           {!this.props.unslick ? prevArrow : ""}
           {!this.props.unslick ? nextArrow : ""}
-        </ul>
+        </div>
         <div ref={this.listRefHandler} {...listProps}>
           <Track ref={this.trackRefHandler} {...trackProps}>
             {this.props.children}

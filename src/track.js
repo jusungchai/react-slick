@@ -129,14 +129,14 @@ const renderSlides = spec => {
     // The third child is the slide item provided to Slider, while its parents
     // are interal wrapping elements, here we pass down the active slide state.
     child = cloneUntilWith(3, child, {
-      active: isSlideActive
+      active: isSlideActive,
+      clone: Boolean(slideClasses["slick-cloned"])
     });
 
     // push a cloned element of the desired slide
     slides.push(
       React.cloneElement(child, {
         key: `slide-${index}`,
-        id: `slide-${index}`,
         "data-index": index,
         className: classnames(slideClasses, slideClass),
         tabIndex: "-1",
@@ -167,7 +167,8 @@ const renderSlides = spec => {
         const isSlideActive = slideClasses["slick-active"];
 
         child = cloneUntilWith(3, child, {
-          active: isSlideActive
+          active: isSlideActive,
+          clone: Boolean(slideClasses["slick-cloned"])
         });
 
         preCloneSlides.push(
@@ -198,7 +199,8 @@ const renderSlides = spec => {
         const isSlideActive = slideClasses["slick-active"];
 
         child = cloneUntilWith(3, child, {
-          active: isSlideActive
+          active: isSlideActive,
+          clone: Boolean(slideClasses["slick-cloned"])
         });
 
         postCloneSlides.push(
@@ -234,13 +236,13 @@ export class Track extends React.PureComponent {
     const { onMouseEnter, onMouseOver, onMouseLeave } = this.props;
     const mouseEvents = { onMouseEnter, onMouseOver, onMouseLeave };
     return (
-      <ul
+      <div
         className="slick-track"
         style={this.props.trackStyle}
         {...mouseEvents}
       >
         {slides}
-      </ul>
+      </div>
     );
   }
 }
